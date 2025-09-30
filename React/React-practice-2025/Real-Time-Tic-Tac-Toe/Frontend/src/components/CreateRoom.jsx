@@ -10,7 +10,9 @@ function CreateRoom({ socket }) {
 
     socket.emit("create_room", { name: roomName });
   };
-
+const handleJoinRoom=()=>{
+  console.log("joining room");
+}
   useEffect(() => {
     // Listen only once when mounted
     socket.on("room_created", ({ roomId, state }) => {
@@ -35,12 +37,21 @@ function CreateRoom({ socket }) {
           className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
         />
 
-        <button
+       <div className=" gap-2.5 my-3">
+
+         <button
           onClick={handleCreateRoom}
-          className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md transition duration-200 cursor-pointer"
+          className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md transition duration-200 cursor-pointe my-2"
         >
           Create Room
         </button>
+        <button
+          onClick={handleJoinRoom}
+          className="w-full bg-red-400 text-white font-semibold py-2 px-4 rounded-md transition duration-200 cursor-pointer my-2"
+        >
+         Join Room
+        </button>
+       </div>
 
         {roomInfo && (
           <div className="mt-4 text-left text-gray-300">

@@ -4,7 +4,7 @@ import CreateRoom from "./components/CreateRoom";
 import  {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 
 
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3001");
 
 function App() {
   const navigate=useNavigate()

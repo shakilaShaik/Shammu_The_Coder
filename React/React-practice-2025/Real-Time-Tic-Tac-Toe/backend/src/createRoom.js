@@ -1,5 +1,4 @@
 
-
 const createRoom=((socketId, name, rooms)=>{
 
     const roomId = Math.random().toString(36).substr(2, 6);
