@@ -4,6 +4,8 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import createRoom from "./src/createRoom.js"
 import joinRoom from './src/joinRoom.js';
+import makeMove from "./src/makeMove.js";
+
 const app = express();
 app.use(cors({
   origin: "http://localhost:5173"
@@ -56,6 +58,19 @@ io.on("connection", (socket) => {
     console.log("the state change with user", stateChange);
     io.to(roomId).emit("room_state", { stateChange })
   })
+
+
+  // inside io.on("connection", ...)
+  socket.on("make_move", ({ roomId, index }) => {
+    const state = rooms[roomId];
+    if (!state) return;
+
+    const updatedState = makeMove({ socketId: socket.id, index, state });
+    rooms[roomId] = updatedState;
+
+    io.to(roomId).emit("room_state", { stateChange: updatedState });
+  });
+
 
 })
 
