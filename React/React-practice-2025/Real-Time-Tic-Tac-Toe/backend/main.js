@@ -43,23 +43,32 @@ io.on("connection", (socket) => {
   })
 
 
+  // socket.on("join_room", (roomId, name) => {
+  //   console.log("triggering joining room", roomId, name);
+  //   console.log("the rooms present here", rooms);
+  //   console.log("Trying to join room:", `"${roomId}"`);
+  //   console.log("Available rooms:", Object.keys(rooms));
+
+  //   if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
+
+
+  //   const stateChange = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
+  //   rooms[roomId] = stateChange
+  //   socket.join(roomId)
+  //   console.log("the state change with user", stateChange);
+  //   io.to(roomId).emit("room_state", { stateChange })
+  // })
+
   socket.on("join_room", (roomId, name) => {
-    console.log("triggering joining room", roomId, name);
-    console.log("the rooms present here", rooms);
-    console.log("Trying to join room:", `"${roomId}"`);
-    console.log("Available rooms:", Object.keys(rooms));
+    if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found");
 
-    if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
+    const stateChange = joinRoom({ socketId: socket.id, name, state: rooms[roomId] });
+    rooms[roomId] = stateChange;
+    socket.join(roomId);
 
-
-    const stateChange = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
-    rooms[roomId] = stateChange
-    socket.join(roomId)
-    console.log("the state change with user", stateChange);
-    io.to(roomId).emit("room_state", { stateChange })
-  })
-
-
+    // Emit to everyone in the room, including the creator
+    io.to(roomId).emit("room_state", { stateChange });
+  });
   // inside io.on("connection", ...)
   socket.on("make_move", ({ roomId, index }) => {
     const state = rooms[roomId];
