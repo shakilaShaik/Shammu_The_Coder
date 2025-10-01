@@ -9,6 +9,9 @@ app.use(cors({
   origin: "http://localhost:5173"
 }))
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Socket.IO real time tic-tac-toe Server ");
+});
 
 const server = http.createServer(app);
 
@@ -38,17 +41,17 @@ io.on("connection", (socket) => {
   })
 
 
-  socket.on("join_room", (roomId, name ) => {
+  socket.on("join_room", (roomId, name) => {
     console.log("triggering joining room", roomId, name);
-    console.log("the rooms present here",rooms);
+    console.log("the rooms present here", rooms);
     console.log("Trying to join room:", `"${roomId}"`);
     console.log("Available rooms:", Object.keys(rooms));
 
     if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
 
 
-    const stateChange = joinRoom({socketId:socket.id, name, state:rooms[roomId]})
-    rooms[roomId]=stateChange
+    const stateChange = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
+    rooms[roomId] = stateChange
     socket.join(roomId)
     console.log("the state change with user", stateChange);
     io.to(roomId).emit("room_state", { stateChange })
