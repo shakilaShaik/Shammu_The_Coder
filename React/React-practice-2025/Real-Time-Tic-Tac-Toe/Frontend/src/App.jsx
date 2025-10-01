@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import CreateRoom from "./components/CreateRoom";
 import  {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
+import JoinRoom from "./components/JoinRoom";
 
 
 const socket = io("http://localhost:3001");
@@ -22,6 +23,7 @@ function App() {
 
 <Route path="/" element={<h1> welcome to the game </h1>}/>
         <Route path="/create-room" source element={<CreateRoom socket={socket} />}/>
+         <Route path="/join-room" source element={<JoinRoom socket={socket} />}/>
        
       </Routes>
       

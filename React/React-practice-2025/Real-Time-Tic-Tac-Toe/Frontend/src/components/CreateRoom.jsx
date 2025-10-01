@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-
+import { Navigate, useNavigate } from "react-router-dom";
 function CreateRoom({ socket }) {
   const [roomName, setRoomName] = useState("");
   const [roomInfo, setRoomInfo] = useState(null);
+  const navigate=useNavigate()
 
   const handleCreateRoom = () => {
     if (!roomName) return;
@@ -11,7 +12,8 @@ function CreateRoom({ socket }) {
     socket.emit("create_room", { name: roomName });
   };
 const handleJoinRoom=()=>{
-  console.log("joining room");
+  navigate("/join-room")
+  
 }
   useEffect(() => {
     // Listen only once when mounted
@@ -31,7 +33,7 @@ const handleJoinRoom=()=>{
 
         <input
           type="text"
-          placeholder="Enter room name"
+          placeholder="Enter your name"
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
           className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
