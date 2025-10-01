@@ -20,6 +20,8 @@ io.on("connection", (socket) => {
 
   socket.on("create_room", ({ name }) => {
     console.log("listened create  room", name);
+    if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
+
 
     const { roomId, state } = createRoom(socket.id, name)
     if (!roomId || !state) {
@@ -36,19 +38,15 @@ io.on("connection", (socket) => {
 
 
   socket.on("join_room", (roomId, name) => {
-    console.log("triggering joining room", roomId, name);
-    console.log("the rooms present here", rooms);
-    console.log("Trying to join room:", `"${roomId}"`);
-    console.log("Available rooms:", Object.keys(rooms));
-
+  
     if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
 
 
-    const stateChange = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
+    const state = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
     rooms[roomId] = stateChange
     socket.join(roomId)
     console.log("the state change with user", stateChange);
-    io.to(roomId).emit("room_state", { stateChange })
+    io.to(roomId).emit("room_state", { state: rooms[roomId] })
   })
 
   
@@ -58,7 +56,7 @@ io.on("connection", (socket) => {
     const {state}=makeMove(pos,socket.id,rooms[roomId])
 
     rooms[roomId]=state
-  io.to(roomId).emit("room_state",{state})
+  io.to(roomId).emit("room_state",{state: rooms[roomId]})
 
   })
 
