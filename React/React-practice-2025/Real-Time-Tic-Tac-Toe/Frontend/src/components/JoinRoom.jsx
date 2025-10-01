@@ -12,7 +12,8 @@ const JoinRoom = ({socket}) => {
  useEffect(() => {
     socket.on("room_state",({stateChange})=>{
         console.log("listening for state change event after joining user", stateChange);
-        setRoomInfo(stateChange)
+      setRoomInfo(stateChange)
+      
        
 
     })
@@ -32,7 +33,7 @@ const handleJoinRoom=()=>{
 
 
 }
- if (roomInfo) return <Game room={roomInfo} />;
+ if (roomInfo) return <Game room={roomId} />;
 
   return (
     <div className="flex items-center justify-center min-h-screen">

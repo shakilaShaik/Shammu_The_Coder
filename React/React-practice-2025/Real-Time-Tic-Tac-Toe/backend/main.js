@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
 
   socket.on("create_room", ({ name }) => {
     console.log("listened create  room", name);
-    if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
+    
 
 
     const { roomId, state } = createRoom(socket.id, name)
