@@ -43,9 +43,9 @@ io.on("connection", (socket) => {
 
 
     const state = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
-    rooms[roomId] = stateChange
+    rooms[roomId] = state
     socket.join(roomId)
-    console.log("the state change with user", stateChange);
+    // console.log("the state change with user", stateChange);
     io.to(roomId).emit("room_state", { state: rooms[roomId] })
   })
 
