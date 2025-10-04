@@ -20,62 +20,75 @@ io.on("connection", (socket) => {
 
   socket.on("create_room", ({ name }) => {
     console.log("listened create  room", name);
-    
+
+
 
 
     const { roomId, state } = createRoom(socket.id, name)
+
+
     if (!roomId || !state) {
       return io.to(socket.id).emit("error", "Room creation failed");
+    }
+    // ✅ check if socket already in any existing room
+    for (const existingRoomId in rooms) {
+      const room = rooms[existingRoomId];
+      if (room.players.X?.id === socket.id || room.players.O?.id === socket.id) {
+        socket.emit("error", "You are already in another game");
+        console.log("you are already in another room");
+        return;
+      }
     }
 
     rooms[roomId] = state
     socket.join(roomId)
-    console.log("rooms present when created", rooms);
+    console.log("room created name", state.players.X.name);
 
-    io.to(socket.id).emit("room_created", { roomId, state })
+    io.to(socket.id).emit("room_state", { roomId, state })
 
   })
 
 
   socket.on("join_room", (roomId, name) => {
-  
+
     if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found")
 
 
+
     const state = joinRoom({ socketId: socket.id, name, state: rooms[roomId] })
-    rooms[roomId] = stateChange
+    rooms[roomId] = state
     socket.join(roomId)
-    console.log("the state change with user", stateChange);
+    console.log("the state change with user", state);
     io.to(roomId).emit("room_state", { state: rooms[roomId] })
   })
 
-  
 
-  socket.on("make_move",({roomId,pos})=>{
-     if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found");
-    const {state}=makeMove(pos,socket.id,rooms[roomId])
 
-    rooms[roomId]=state
-  io.to(roomId).emit("room_state",{state: rooms[roomId]})
+  socket.on("make_move", ({ roomId, pos }) => {
+    if (!rooms[roomId]) return io.to(socket.id).emit("error", "Room not found");
+    const { state } = makeMove(pos, socket.id, rooms[roomId])
+
+    rooms[roomId] = state
+    io.to(roomId).emit("room_state", { state: rooms[roomId] })
 
   })
 
 
 
   socket.on("disconnect", () => {
-  for (const [roomId, state] of Object.entries(rooms)) {
-    if (state.players[socket.id]) {
-      delete state.players[socket.id];
-      console.log(`Removed ${socket.id} from room ${roomId}`);
-    }
+    for (const [roomId, state] of Object.entries(rooms)) {
+      if (state.players[socket.id]) {
+        delete state.players[socket.id];
+        console.log(`Removed ${socket.id} from room ${roomId}`);
+      }
 
-    // delete room if empty
-    if (Object.keys(state.players).length === 0) {
-      delete rooms[roomId];
-      console.log(`Deleted empty room ${roomId}`);
+      // delete room if empty
+      if (Object.keys(state.players).length === 0) {
+        delete rooms[roomId];
+        console.log(`Deleted empty room ${roomId}`);
+      }
     }
-  }
-});
+  });
 
 
 })

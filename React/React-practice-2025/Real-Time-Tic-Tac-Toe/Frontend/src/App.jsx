@@ -22,8 +22,8 @@ function App() {
      
       <Routes>
 
-<Route path="/" element={<h1> welcome to the game </h1>}/>
-        <Route path="/create-room"  element={<CreateRoom socket={socket} />}/>
+
+        <Route path="/"  element={<CreateRoom socket={socket} />}/>
          <Route path="/join-room"  element={<JoinRoom socket={socket} />}/>
          <Route path="/game"  element={<Game socket={socket}/>}/>
        
