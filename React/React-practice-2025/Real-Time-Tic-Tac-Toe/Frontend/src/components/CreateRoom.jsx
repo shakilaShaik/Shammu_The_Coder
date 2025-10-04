@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 function CreateRoom({ socket }) {
   const [roomName, setRoomName] = useState("");
   const [roomInfo, setRoomInfo] = useState(null);
+  console.log("the room info type is", roomInfo);
   const navigate=useNavigate()
 
   const handleCreateRoom = () => {
@@ -13,18 +14,19 @@ function CreateRoom({ socket }) {
   };
 const handleJoinRoom=()=>{
   navigate("/join-room")
-  
-}
+  }
   useEffect(() => {
     // Listen only once when mounted
-    socket.on("room_created", ({ roomId, state }) => {
+    socket.on("room_state", ({ roomId, state }) => {
+      console.log("the room id , state from backend", roomId,state);
       setRoomInfo({ roomId, state });
     });
-
+   
     return () => {
       socket.off("room_created"); // cleanup listener
     };
   }, [socket]);
+  // navigate("/game", state=)
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-yellow">
