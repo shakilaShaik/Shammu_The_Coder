@@ -1,15 +1,22 @@
-import { useEffect } from "react";
+import { createContext, useEffect } from "react";
 import { io } from "socket.io-client";
 import CreateRoom from "./components/CreateRoom";
 import  {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import JoinRoom from "./components/JoinRoom";
 import Game from "./components/Game";
 
-
-const socket = io("http://localhost:3001");
+import { useContext } from "react";
+ const socket = io("http://localhost:3001");
+export const SocketContext=createContext()
+ export  const  SocketProvider=(({children})=>{
+    return <SocketContext.Provider value={ socket} >
+      {children}
+    </SocketContext.Provider> 
+  
+  })
 
 function App() {
-  const navigate=useNavigate()
+
   useEffect(() => {
     // Cleanup when component unmounts
     return () => {
@@ -17,15 +24,17 @@ function App() {
     };
   }, []);
 
+  
+
   return (
     <div>
      
       <Routes>
 
 
-        <Route path="/"  element={<CreateRoom socket={socket} />}/>
-         <Route path="/join-room"  element={<JoinRoom socket={socket} />}/>
-         <Route path="/game"  element={<Game socket={socket}/>}/>
+        <Route path="/"  element={<CreateRoom  />}/>
+         <Route path="/join-room"  element={<JoinRoom  />}/>
+         <Route path="/game"  element={<Game />}/>
        
       </Routes>
       
