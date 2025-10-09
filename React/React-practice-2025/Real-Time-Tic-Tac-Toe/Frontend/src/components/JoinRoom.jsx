@@ -34,29 +34,38 @@ function JoinRoom() {
 
         <input
           type="text"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black mb-3"
+          placeholder="Enter room ID"
+          value={roomId}
+            onChange={(e)=>{setRoomId(e.target.value.trim())}}
+         
+          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
         />
 
         <input
           type="text"
-          placeholder="Enter room ID"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
-          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black mb-3"
+          placeholder="Enter Your Name"
+          value={name}
+         onChange={(e)=>{setName(e.target.value)}}
+          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
         />
 
-        <button
-          onClick={handleJoin}
-          className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md"
+       <div className=" gap-2.5 my-3">
+
+         <button
+          onClick={handleJoinRoom}
+          className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md transition duration-200 cursor-pointer my-2"
         >
           Join Room
         </button>
-      </div>
+       
+       
+       </div>
     </div>
-  );
+
+
+
+    </div>
+  )
 }
 
 export default JoinRoom;
