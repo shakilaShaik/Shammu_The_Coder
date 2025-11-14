@@ -117,10 +117,6 @@ const createUSer = async () => {
 }
 createUSer()
 
-
-
-
-
 app.get("/", (req, res) => {
     console.log("hello iam a server");
     res.send("the server is running")
