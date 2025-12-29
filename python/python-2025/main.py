@@ -1,0 +1,1 @@
+print("hii shammu i am your first pythin pgm")

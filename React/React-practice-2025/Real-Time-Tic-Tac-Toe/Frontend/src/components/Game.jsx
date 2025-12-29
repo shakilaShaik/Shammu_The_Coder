@@ -1,77 +1,70 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { SocketContext } from "../App";
+import Board from "./Board";
 
-const Game = ({ socket, playerName }) => {
-  const { roomId } = useParams();
+const Game = () => {
+  const socket = useContext(SocketContext);
+  const location = useLocation();
   const navigate = useNavigate();
-  const [state, setState] = useState(null);
-  const [playerSymbol, setPlayerSymbol] = useState(null);
 
-  // Listen to room state updates
+  const { roomId, playerName, playerMark } = location.state || {};
+  const [roomState, setRoomState] = useState(null);
+
   useEffect(() => {
-    socket.on("room_state", ({ stateChange }) => {
-      setState(stateChange);
-
-      // Determine your symbol (X or O)
-      if (stateChange.players.X.id === socket.id) setPlayerSymbol("X");
-      else if (stateChange.players.O && stateChange.players.O.id === socket.id)
-        setPlayerSymbol("O");
-    });
-
-    socket.on("error", (msg) => {
-      alert(msg);
+    if (!roomId) {
       navigate("/");
+      return;
+    }
+
+    socket.emit("room_state", { roomId });
+
+    socket.on("room_state", ({ state }) => {
+      console.log("♻️ Updated room state:", state);
+      setRoomState(state);
     });
+
+    socket.on("error", (msg) => alert(msg));
 
     return () => {
       socket.off("room_state");
       socket.off("error");
     };
-  }, [socket, navigate]);
+  }, [socket, roomId, navigate]);
 
-  if (!state) return <div>Loading game...</div>;
-
-  const handleCellClick = (index) => {
-    if (
-      state.status !== "playing" ||
-      state.board[index] !== "" ||
-      state.turn !== playerSymbol
-    )
-      return;
-
-    socket.emit("make_move", { roomId, index });
+  const handleMove = (pos) => {
+    if (!roomId || !roomState) return;
+    if (roomState.status !== "playing") return alert("Game not started yet!");
+    if (roomState.turn !== playerMark) return alert("Not your turn!");
+    socket.emit("make_move", { roomId, pos });
   };
 
+  if (!roomState) return <p className="text-center mt-10">Loading game...</p>;
+
+  const isMyTurn = roomState.turn === playerMark;
+  const { board, turn, winner, status } = roomState;
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-50">
-      <h2 className="text-xl font-bold mb-2">Room ID: {roomId}</h2>
-      <h3 className="text-lg mb-4">
-        You are: <span className="font-bold">{playerSymbol}</span>
-      </h3>
-      <h3 className="text-lg mb-4">
-        {state.status === "finished"
-          ? `Winner: ${state.winner}`
-          : state.turn === playerSymbol
-          ? "Your Turn"
-          : "Opponent's Turn"}
-      </h3>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-yellow-100">
+      <h2 className="text-2xl font-bold mb-2">Room ID: {roomId}</h2>
+      <p className="mb-2">You are: {playerName} ({playerMark})</p>
 
-      <div className="grid grid-cols-3 gap-2 w-64">
-        {state.board.map((cell, idx) => (
-          <div
-            key={idx}
-            onClick={() => handleCellClick(idx)}
-            className="w-16 h-16 flex items-center justify-center bg-white border text-2xl font-bold cursor-pointer hover:bg-gray-100"
-          >
-            {cell}
-          </div>
-        ))}
-      </div>
+      <Board board={board} makeMove={handleMove} disabled={!isMyTurn || status !== "playing"} />
 
-      {state.status === "finished" && (
+      <p className="mt-2 text-lg">
+        {winner === "draw"
+          ? "🤝 It's a Draw!"
+          : winner
+          ? `🏆 Winner: ${winner}`
+          : status === "waiting"
+          ? "Waiting for another player..."
+          : `Turn: ${turn}`}
+      </p>
+
+      {winner && (
         <button
-          className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-md"
           onClick={() => navigate("/")}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
         >
           Back to Home
         </button>

@@ -1,4 +1,4 @@
-// const http = require('http')
+const http = require('http')
 // const eventEmmitter = require('events')
 
 // const server = http.createServer((req, res) => {
@@ -18,23 +18,23 @@
 
 const fs = require('fs');
 
-// // Create a readable stream
-// const stream = fs.createReadStream('shammu.txt', { encoding: 'utf8' });
+// Create a readable stream
+const stream = fs.createReadStream('shammu.txt', { encoding: 'utf8' });
 
-// // Listen for data chunks
-// stream.on('data', (chunk) => {
-//   console.log('Received chunk:', chunk);
-// });
+// Listen for data chunks
+stream.on('data', (chunk) => {
+    console.log('Received chunk:', chunk);
+});
 
-// // Listen for end of file
-// stream.on('end', () => {
-//   console.log('No more data.');
-// });
+// Listen for end of file
+stream.on('end', () => {
+    console.log('No more data.');
+});
 
 
 
 // Watch a file for changes
-fs.watch('shammu_test.txt', (eventType, filename) => {
+fs.watch('shammu.txt', (eventType, filename) => {
     if (filename) {
         console.log(`File ${filename} changed, Event type: ${eventType}`);
     }

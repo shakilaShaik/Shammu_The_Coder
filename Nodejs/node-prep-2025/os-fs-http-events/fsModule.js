@@ -1,15 +1,15 @@
 const fs = require('fs')
 
 
-// fs.writeFile('shammu.txt',"Hey i am from file shammu.txt",(err)=>{
-//     console.log("completed writing a file ")
+fs.writeFile('shammu.txt',"Hey i am from file shammu.txt",(err)=>{
+    console.log("completed writing a file ")
 
-// })
+})
 
-// fs.readFile('shammu.txt', 'utf8',(err,data)=>{
-//     console.log("completed file reading", data)
-//     console.log("errors is ", err)
-// })
+fs.readFile('shammu.txt', 'utf8',(err,data)=>{
+    console.log("completed file reading", data)
+    console.log("errors is ", err)
+})
 
 const a = fs.writeFileSync("shammu.txt", "I am chaning text")
 

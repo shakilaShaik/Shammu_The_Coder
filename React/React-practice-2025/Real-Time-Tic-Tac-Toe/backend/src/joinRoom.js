@@ -1,12 +1,17 @@
-function joinRoom({ socketId,name, state }) {
-    console.log("the state passes to join room function", state);
+export const joinRoom = ({ socketId, name, state }) => {
+  if (!state) return null;
 
-  if(!state.players.O){
-    state.players.O={id:socketId,name}
-    state.status="playing"
+  if (state.players.X.id === socketId || state.players.O?.id === socketId) {
+    console.warn("Player already in the room");
+    return state;
   }
-return state
 
-  
-}
-export default joinRoom
+  if (!state.players.O) {
+    state.players.O = { id: socketId, name };
+    state.status = "playing";
+  } else {
+    console.warn("Room is full!");
+  }
+
+  return state;
+};

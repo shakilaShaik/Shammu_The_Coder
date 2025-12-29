@@ -1,14 +1,20 @@
-import { useEffect } from "react";
+import { createContext, useEffect } from "react";
 import { io } from "socket.io-client";
 import CreateRoom from "./components/CreateRoom";
 import JoinRoom from "./components/JoinRoom";
-import Game from "./components/Game"; // import Game component
-import { Routes, Route, useNavigate } from "react-router-dom";
+import Game from "./components/Game";
 
-const socket = io("http://localhost:3001");
+import { useContext } from "react";
+ const socket = io("http://localhost:3001");
+export const SocketContext=createContext()
+ export  const  SocketProvider=(({children})=>{
+    return <SocketContext.Provider value={ socket} >
+      {children}
+    </SocketContext.Provider> 
+  
+  })
 
 function App() {
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Cleanup when component unmounts
@@ -17,21 +23,22 @@ function App() {
     };
   }, []);
 
+  
+
   return (
     <div>
       <Routes>
-        <Route path="/" element={<h1>Welcome to the game</h1>} />
-        <Route path="/create-room" element={<CreateRoom socket={socket} />} />
-        <Route path="/join-room" element={<JoinRoom socket={socket} />} />
-        <Route path="/game/:roomId" element={<Game socket={socket} />} />
-      </Routes>
 
-      <button
-        onClick={() => navigate("/create-room")}
-        className="w-[200px] h-[50px] bg-yellow-500"
-      >
-        Create Room and Play
-      </button>
+
+        <Route path="/"  element={<CreateRoom  />}/>
+         <Route path="/join-room"  element={<JoinRoom  />}/>
+         <Route path="/game"  element={<Game />}/>
+       
+      </Routes>
+      
+     
+     
+     
     </div>
   );
 }
