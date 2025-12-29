@@ -36,17 +36,16 @@ function JoinRoom() {
           type="text"
           placeholder="Enter room ID"
           value={roomId}
-            onChange={(e)=>{setRoomId(e.target.value.trim())}}
-         
-          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
+          onChange={(e) => setRoomId(e.target.value.trim())}
+          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400 mb-3"
         />
 
         <input
           type="text"
           placeholder="Enter Your Name"
           value={name}
-         onChange={(e)=>{setName(e.target.value)}}
-          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400  mb-3"
+          onChange={(e) => setName(e.target.value)}
+          className="w-full px-3 py-2 rounded-md bg-gray-100 text-black placeholder-gray-400 mb-3"
         />
 
        <div className=" gap-2.5 my-3">
@@ -65,7 +64,7 @@ function JoinRoom() {
 
 
     </div>
-  )
-}
+  );
+};
 
 export default JoinRoom;

@@ -1,7 +1,6 @@
 import { createContext, useEffect } from "react";
 import { io } from "socket.io-client";
 import CreateRoom from "./components/CreateRoom";
-import  {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import JoinRoom from "./components/JoinRoom";
 import Game from "./components/Game";
 
@@ -28,7 +27,6 @@ function App() {
 
   return (
     <div>
-     
       <Routes>
 
 
